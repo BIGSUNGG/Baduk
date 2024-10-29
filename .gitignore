@@ -1,0 +1,10 @@
+bin
+.vs
+obj
+
+Client/Build
+Client/Builds
+Client/Library
+Client/Logs
+Client/obj
+Client/Temp
