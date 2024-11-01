@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,12 +25,12 @@ namespace Network
         {
             string message = System.Text.Encoding.UTF8.GetString(data.Array, 0, data.Count);
             Console.WriteLine($"Recv : {message}");
+            Program.form.RecvMessage(message);
         }
 
-        protected override void OnSendPacket(ArraySegment<byte> data)
+        protected override void OnSendPacket(int numOfBytes)
         {
-            string message = System.Text.Encoding.UTF8.GetString(data.Array, 0, data.Count);
-            Console.WriteLine($"Send : {message}");
+            Console.WriteLine($"Send : {numOfBytes}");
         }
     }
 }

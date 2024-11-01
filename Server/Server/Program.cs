@@ -25,7 +25,7 @@ namespace Server
             Listener listener = new Listener();
             listener.Listen(() => { return new ClientSession(); });
 
-            Application.Run(new Form1());
+            Application.Run(new ServerForm());
         }
     }
 }

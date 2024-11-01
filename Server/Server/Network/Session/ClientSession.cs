@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,11 +11,14 @@ namespace Network
 {
     public class ClientSession : Session
     {
+        public string Name = string.Empty;
+        public Room MyRoom = null;
+
         protected override void OnConnect()
         {
             Trace.WriteLine($"Connect");
 
-            Send("Hello");
+            Send("Name?");
         }
 
         protected override void OnDiscconect()
@@ -27,16 +31,24 @@ namespace Network
             string message = System.Text.Encoding.UTF8.GetString(data.Array, 0, data.Count);
             Trace.WriteLine($"Recv : {message}");
 
-            foreach (var session in Listener.clients)
+            if (Name == string.Empty)
             {
-                session.Send(message);
+                Name = message;
+                MyRoom = RoomManager.Instance.GetEnterableRoom(this);
+            }
+            else
+            {
+                foreach (var session in MyRoom.Sessions)
+                {
+                    LogManager.Instance.PushMessage($"{MyRoom.Id} : {Name} : {message}");
+                    session.Send($"{Name} : {message}");
+                }
             }
         }
 
-        protected override void OnSendPacket(ArraySegment<byte> data)
+        protected override void OnSendPacket(int numOfBytes)
         {
-            string message = System.Text.Encoding.UTF8.GetString(data.Array, 0, data.Count);
-            Trace.WriteLine($"Send : {message}");
+            Trace.WriteLine($"Send : {numOfBytes}");
         }
     }
 }

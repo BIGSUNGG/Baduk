@@ -43,6 +43,8 @@ namespace Network
         {
             _socket.Shutdown(SocketShutdown.Both);
             _socket.Close();
+
+            OnDiscconect();
         }
 
         protected abstract void OnDiscconect();
@@ -64,10 +66,11 @@ namespace Network
             if (args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
             {
                 _sendArgs.BufferList = null;
+                OnSendPacket(_sendArgs.BytesTransferred);
             }
         }
 
-        protected abstract void OnSendPacket(ArraySegment<byte> data);
+        protected abstract void OnSendPacket(int numOfBytes);
         #endregion
 
         #region Recv

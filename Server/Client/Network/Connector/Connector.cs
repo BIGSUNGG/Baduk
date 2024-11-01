@@ -15,7 +15,7 @@ namespace Network
         Socket _listenSocket;
         Func<Session> _sessionFactory;
 
-        public Session _serverSession;
+        public static Session _serverSession;
 
         public void Connect(Func<Session> sessionFactory)
         {
