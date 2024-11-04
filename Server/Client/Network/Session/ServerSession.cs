@@ -25,7 +25,8 @@ namespace Network
         {
             string message = System.Text.Encoding.UTF8.GetString(data.Array, 0, data.Count);
             Console.WriteLine($"Recv : {message}");
-            Program.form.RecvMessage(message);
+
+            LogManager.Instance.PushMessage(message);
         }
 
         protected override void OnSendPacket(int numOfBytes)

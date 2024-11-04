@@ -26,6 +26,7 @@ namespace Server
             timer.Start();
 
             textBox2.Multiline = true;
+            textBox2.ReadOnly = true;
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -64,6 +65,21 @@ namespace Server
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                foreach (var session in Listener.clients)
+                {
+                    session.Send($"From Server : {textBox1.Text}");
+                }
+                textBox1.Text = "";
+            }
         }
     }
 }

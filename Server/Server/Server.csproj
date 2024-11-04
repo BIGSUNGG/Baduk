@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Network\Session\ClientSession_Room.cs" />
     <Compile Include="Room\Room.cs" />
     <Compile Include="ServerForm.cs">
       <SubType>Form</SubType>

@@ -11,7 +11,9 @@ namespace Server
     {
         private object _lock = new object();
         private List<Room> Rooms { get; set; } = new List<Room>();
+        private HashSet<ClientSession> WaitingSessions = new HashSet<ClientSession>();
         int lastId = 0;
+        int RoomSize = 2;
 
         private static RoomManager _instance;
         public static RoomManager Instance 
@@ -27,24 +29,36 @@ namespace Server
 
         private RoomManager() { }
 
-        public Room GetEnterableRoom(ClientSession session)
+        public void RegisterSession(ClientSession session)
         {
-            lock(_lock)
+            lock (_lock)
             {
-	            foreach (var room in Rooms)
-	            {
-                    if (room.Sessions.Count < 2)
-                    {
-                        room.Enter(session);
-                        return room;
-                    }
-	            }
+                WaitingSessions.Add(session);
+                LogManager.Instance.PushMessage($"Regist user {session.Name}");
 
-                Room newRoom = new Room();
-                newRoom.Id = lastId++;
-                newRoom.Enter(session);
-                Rooms.Add(newRoom);
-                return newRoom;
+                // 매칭 중인 유저가 2명 이상이라면
+                if(WaitingSessions.Count >= RoomSize)
+                {
+                    Room room = new Room(lastId++);
+                    Rooms.Add(room);
+
+                    // 2명의 유저를 하나의 룸으로 참가
+                    for(int i = 0; i < RoomSize; i++)
+                    {
+                        ClientSession waitingSession = WaitingSessions.First();
+                        WaitingSessions.Remove(waitingSession);
+                        room.Enter(waitingSession);
+                    }
+                }
+            }
+        }
+
+        public void UnregisterSession(ClientSession session)
+        {
+            lock (_lock)
+            {
+                LogManager.Instance.PushMessage($"Unregist user {session.Name}");
+                WaitingSessions.Remove(session);
             }
         }
     }

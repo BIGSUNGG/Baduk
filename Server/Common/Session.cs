@@ -9,8 +9,8 @@ namespace Network
 {
     public abstract class Session
     {
-        object _lock = new object();
-        Socket _socket = null;
+        private object _lock = new object();
+        protected Socket _socket = null;
 
         SocketAsyncEventArgs _sendArgs = new SocketAsyncEventArgs();
         SocketAsyncEventArgs _recvArgs = new SocketAsyncEventArgs();
@@ -51,22 +51,59 @@ namespace Network
         #endregion
 
         #region Send
+        // Send 로직 : Send => RegisterSend => OnSendCompleted => pendingQueue에 메시지가 있다면 다시 RegisterSend 반복
+        Queue<string> sendQueue = new Queue<string>(); // 전송 대기 중인 메시지 큐
+        bool sending = false; // 현재 패킷을 전송 중인지
+
         public void Send(string message)
         {
-            if (message.Equals(string.Empty) == false)
+            lock(_lock)
             {
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(message);
-                _sendArgs.SetBuffer(buffer, 0, buffer.Length);
-                _socket.SendAsync(_sendArgs);
+                sendQueue.Enqueue(message);
+                if (sending == false)
+                    RegisterSend();
+            }
+        }
+
+        private void RegisterSend()
+        {
+            lock (_lock)
+            {
+                if (sendQueue.Count == 0)
+                    return;
+
+                string message = "";
+                while(sendQueue.Count > 0)
+                {
+                    message += $"{sendQueue.Dequeue()}\n";
+                }
+
+                if (message.Equals(string.Empty) == false)
+                {
+                    byte[] buffer = System.Text.Encoding.UTF8.GetBytes(message);
+                    _sendArgs.SetBuffer(buffer, 0, buffer.Length);
+
+                    sending = true;
+                    bool pending = _socket.SendAsync(_sendArgs);
+                    if (pending == false)
+                        OnSendCompleted(null, _sendArgs);
+                }
             }
         }
 
         private void OnSendCompleted(object sender, SocketAsyncEventArgs args)
         {
-            if (args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
+            lock (_lock)
             {
-                _sendArgs.BufferList = null;
-                OnSendPacket(_sendArgs.BytesTransferred);
+                if (args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
+                {
+                    _sendArgs.BufferList = null;
+                    OnSendPacket(_sendArgs.BytesTransferred);
+                }
+
+                sending = false;
+                if (sendQueue.Count > 0)
+                    RegisterSend();
             }
         }
 

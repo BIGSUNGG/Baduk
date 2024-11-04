@@ -26,6 +26,7 @@ namespace Client
             timer.Start();
 
             textBox2.Multiline = true;
+            textBox2.ReadOnly = true;
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -37,14 +38,22 @@ namespace Client
             }
         }
 
-        public void RecvMessage(string message)
-        {
-            LogManager.Instance.PushMessage(message);
-        }
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true; 
+                e.SuppressKeyPress = true; 
+
+                string inputText = textBox1.Text;
+                textBox1.Text = "";
+                Connector._serverSession.Send(inputText);
+            }
         }
 
         private void Send_Click(object sender, EventArgs e)

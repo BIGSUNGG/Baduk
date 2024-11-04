@@ -10,16 +10,49 @@ namespace Server
     public class Room
     {
         private object _lock = new object();
-        public List<ClientSession> Sessions = new List<ClientSession>();
+        public HashSet<ClientSession> Sessions = new HashSet<ClientSession>();
         public int Id;
 
-        public void Enter(ClientSession sesesion)
+        public Room(int inId)
+        {
+            Id = inId;           
+        }
+
+        public void Enter(ClientSession session)
         {
             lock (_lock)
             {
-                Sessions.Add(sesesion);
-                LogManager.Instance.PushMessage($"User {sesesion.Name} Enter {Id} Room");
-                sesesion.Send($"You Enter {Id} Room");
+                Sessions.Add(session);
+                session.OnEnterRoom(this);
+
+                LogManager.Instance.PushMessage($"User {session.Name} Enter {Id} Room");
+                session.Send($"You Enter {Id} Room");
+            }
+        }
+
+        public void Leave(ClientSession session)
+        {
+            lock (_lock)
+            {
+                if (Sessions.Remove(session))
+                {
+                    session.OnLeaveRoom();
+
+                    LogManager.Instance.PushMessage($"User {session.Name} Leave {Id} Room");
+                    session.Send($"You Leave {Id} Room");
+                }
+            }
+        }
+
+        public void SendAll(ClientSession sender, string message)
+        {
+            lock (_lock)
+            {
+                LogManager.Instance.PushMessage($"Room {Id} : {sender.Name} : {message}");
+                foreach (var session in Sessions)
+                {
+                    session.Send($"{sender.Name} : {message}");
+                }
             }
         }
     }
