@@ -52,8 +52,9 @@
     <Compile Include="ClientForm.Designer.cs">
       <DependentUpon>ClientForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Network\Connector\Connector.cs" />
-    <Compile Include="Network\Session\ServerSession.cs" />
+    <Compile Include="Properties\Network\Core\Connector.cs" />
+    <Compile Include="Properties\Network\Session\ServerSession.cs" />
+    <Compile Include="Properties\Network\Session\Session.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Singleton\LogManager.cs" />
@@ -81,12 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{f56a5141-19b1-45ee-8dba-07b46169f27e}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

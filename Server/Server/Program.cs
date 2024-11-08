@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using Network;
+using ServerDB;
 
 namespace Server
 {
@@ -21,9 +22,6 @@ namespace Server
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            Listener listener = new Listener();
-            listener.Listen(() => { return new ClientSession(); });
 
             Application.Run(new ServerForm());
         }

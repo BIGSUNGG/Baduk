@@ -1,4 +1,5 @@
 ﻿using Network;
+using ServerDB;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using ServerDB;
 
 namespace Server
 {
@@ -19,6 +21,9 @@ namespace Server
         public ServerForm()
         {
             InitializeComponent();
+
+            Listener listener = new Listener();
+            listener.Listen(() => { return ClientSessionManager.Instance.Create(); });
 
             timer = new Timer();
             timer.Interval = 10; 
@@ -50,10 +55,6 @@ namespace Server
 
         private void Send_Click(object sender, EventArgs e)
         {
-            foreach(var session in Listener.clients)
-            {
-                session.Send($"From Server : {textBox1.Text}");
-            }
             textBox1.Text = "";
         }
 
@@ -74,10 +75,6 @@ namespace Server
                 e.Handled = true;
                 e.SuppressKeyPress = true;
 
-                foreach (var session in Listener.clients)
-                {
-                    session.Send($"From Server : {textBox1.Text}");
-                }
                 textBox1.Text = "";
             }
         }

@@ -1,4 +1,5 @@
-﻿using Server;
+﻿using Newtonsoft.Json;
+using Server;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,11 +9,25 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using ServerDB;
 
 namespace Network
 {
     public partial class ClientSession : Session
     {
+        public readonly int Id;
+
+        public ClientSession(int inId)
+        {
+            Id = inId;
+        }
+        
+        public void Send(Packet packet)
+        {
+            string packetJson = JsonConvert.SerializeObject(packet);
+            Send(packetJson);
+        }
+
         protected override void OnConnect()
         {
             LogManager.Instance.PushMessage($"Connect");
@@ -30,17 +45,14 @@ namespace Network
 
             //// Keep Alive 설정
             //_socket.IOControl(IOControlCode.KeepAliveValues, inOptionValues, null);
-
-            Send("Name?");
         }
 
         protected override void OnDiscconect()
         {
             LogManager.Instance.PushMessage($"Disconnect {Name}");
 
+            ClientSessionManager.Instance.Remove(this);
             RoomManager.Instance.UnregisterSession(this);
-
-            Listener.clients.Remove(this);
 
             if (MyRoom != null)
                 MyRoom.Leave(this);
@@ -48,19 +60,70 @@ namespace Network
 
         protected override void OnRecvPacket(ArraySegment<byte> data)
         {
-            string message = System.Text.Encoding.UTF8.GetString(data.Array, 0, data.Count);
-            //LogManager.Instance.PushMessage($"Recv : {message}");
+            string json = System.Text.Encoding.UTF8.GetString(data.Array, 0, data.Count);
+            Packet packet = JsonConvert.DeserializeObject<Packet>(json);
 
-            if (Name == string.Empty)
+            switch (packet.Type)
             {
-                Name = message;
-                RoomManager.Instance.RegisterSession(this);
-                Send($"You are {Name}");
-            }
-            else
-            {
-                if (MyRoom != null)
-                    MyRoom.SendAll(this, message);
+                case PacketType.C_LogIn:
+                    {
+                        C_LogInPacket c_LoginPacket = JsonConvert.DeserializeObject<C_LogInPacket>(json);
+
+                        AccountGateWay account = new AccountGateWay();
+                        bool success = account.Select(c_LoginPacket.Name, c_LoginPacket.Password);
+                        if (success)
+                        {
+                            Name = account.Name;
+                            LogManager.Instance.PushMessage($"User {Name} Log In success");
+
+                            S_LogInPacket s_LogInPacket = new S_LogInPacket();
+                            s_LogInPacket.Success = true;
+                            s_LogInPacket.Name = account.Name;
+                            Send(s_LogInPacket);
+                        }
+                        else
+                        {
+                            LogManager.Instance.PushMessage($"User {Name} Log In fail");
+
+                            S_LogInPacket s_LogInPacket = new S_LogInPacket();
+                            s_LogInPacket.Success = false;
+                            Send(s_LogInPacket);
+                        }
+
+                        break;
+                    }
+                case PacketType.C_SignUp:
+                    {
+                        C_SignUpPacket signupPacket = JsonConvert.DeserializeObject<C_SignUpPacket>(json);
+
+                        AccountGateWay account = new AccountGateWay();
+                        account.Name = signupPacket.Name;
+                        account.Password = signupPacket.Password;
+                        account.Score = 1000;
+                        bool successs = account.Insert();
+                        if (successs)
+                        {
+                            Name = account.Name;
+                            LogManager.Instance.PushMessage($"User {Name} Sign Up success");
+
+                            S_SignUpPacket s_SignUpPacket = new S_SignUpPacket();
+                            s_SignUpPacket.Success = true;
+                            s_SignUpPacket.Name = account.Name;
+                            Send(s_SignUpPacket);
+                        }
+                        else
+                        {
+                            LogManager.Instance.PushMessage($"User {Name} Sign Up fail");
+
+                            S_SignUpPacket s_SignUpPacket = new S_SignUpPacket();
+                            s_SignUpPacket.Success = false;
+                            Send(s_SignUpPacket);
+                        }
+
+                        break;
+                    }
+                default:
+                    break;
             }
         }
 

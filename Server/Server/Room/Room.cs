@@ -26,7 +26,6 @@ namespace Server
                 session.OnEnterRoom(this);
 
                 LogManager.Instance.PushMessage($"User {session.Name} Enter {Id} Room");
-                session.Send($"You Enter {Id} Room");
             }
         }
 
@@ -39,19 +38,17 @@ namespace Server
                     session.OnLeaveRoom();
 
                     LogManager.Instance.PushMessage($"User {session.Name} Leave {Id} Room");
-                    session.Send($"You Leave {Id} Room");
                 }
             }
         }
 
-        public void SendAll(ClientSession sender, string message)
+        public void SendAll(ClientSession sender, Packet packet)
         {
             lock (_lock)
             {
-                LogManager.Instance.PushMessage($"Room {Id} : {sender.Name} : {message}");
                 foreach (var session in Sessions)
                 {
-                    session.Send($"{sender.Name} : {message}");
+                    session.Send(packet);
                 }
             }
         }

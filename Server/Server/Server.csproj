@@ -36,8 +36,17 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLConnection, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SqlConnection.1.0.4\lib\netstandard2.0\SQLConnection.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlClient, Version=4.6.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.8.2\lib\net461\System.Data.SqlClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,7 +58,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Network\Packet\C_SignUpPacket.cs" />
+    <Compile Include="Network\Packet\C_LogInPacket.cs" />
+    <Compile Include="Network\Packet\Packet.cs" />
+    <Compile Include="Network\Packet\PacketType.cs" />
+    <Compile Include="Network\Packet\S_LogInPacket.cs" />
+    <Compile Include="Network\Packet\S_SignUpPacket.cs" />
     <Compile Include="Network\Session\ClientSession_Room.cs" />
+    <Compile Include="Network\Session\Session.cs" />
     <Compile Include="Room\Room.cs" />
     <Compile Include="ServerForm.cs">
       <SubType>Form</SubType>
@@ -57,6 +73,7 @@
     <Compile Include="ServerForm.Designer.cs">
       <DependentUpon>ServerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Singleton\ClientSessionManager.cs" />
     <Compile Include="Singleton\RoomManager.cs" />
     <Compile Include="Singleton\LogManager.cs" />
     <Compile Include="Network\Core\Listener.cs" />
@@ -75,6 +92,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -89,9 +107,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{f56a5141-19b1-45ee-8dba-07b46169f27e}</Project>
-      <Name>Common</Name>
+    <ProjectReference Include="..\ServerDB\ServerDB.csproj">
+      <Project>{d0bd5514-e133-4179-8a16-d322a92f180d}</Project>
+      <Name>ServerDB</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

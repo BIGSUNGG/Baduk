@@ -10,9 +10,6 @@ namespace Network
 {
     public class Listener
     {
-        // 참고 자료 : https://siku314.tistory.com/75
-        public static List<Session> clients = new List<Session>(); // 임시 변수 TODO : ClientSessionManager에서 관리하도록
-
         object _lock = new object();
         Socket _listenSocket;
         Func<Session> _sessionFactory;
@@ -67,9 +64,6 @@ namespace Network
                 // Client Session 생성
                 Session session = _sessionFactory();
                 session.Connected(args.AcceptSocket);
-
-                // TODO : ClientSessionManager 만들면 삭제
-                clients.Add(session);
             }
 
             // 클라이언트 접속 완료 시 다른 클라이언트의 연결 처리를 위해 RegisterAccept반복
