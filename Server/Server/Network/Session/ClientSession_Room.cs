@@ -17,13 +17,12 @@ namespace Network
 
         public void OnEnterRoom(Room room)
         {
-            MyRoom = room;
+            MyRoom = room;  
         }
 
         public void OnLeaveRoom()
         {
             MyRoom = null;
         }
-
     }
 }

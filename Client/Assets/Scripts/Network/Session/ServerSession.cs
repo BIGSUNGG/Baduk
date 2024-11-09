@@ -56,9 +56,11 @@ namespace Network
                         S_LogInPacket s_LoginPacket = JsonConvert.DeserializeObject<S_LogInPacket>(json);
                         if(s_LoginPacket.Success)
                         {
+                            Managers.Network.Name = s_LoginPacket.Name;
+
                             UnityEvent sceneMove = new UnityEvent();
-                            sceneMove.AddListener(() => SceneManager.LoadScene("Main Scene", LoadSceneMode.Single));
-                            Managers.Timer.Add(sceneMove, 0.0f);                           
+                            sceneMove.AddListener(() => SceneManager.LoadScene("Matching Scene", LoadSceneMode.Single));
+                            Managers.Timer.SetTimerNextUpdate(sceneMove);                           
                         }
 
                         break;
@@ -68,10 +70,37 @@ namespace Network
                         S_SignUpPacket s_SignUpPacket = JsonConvert.DeserializeObject<S_SignUpPacket>(json);
                         if (s_SignUpPacket.Success)
                         {
+                            Managers.Network.Name = s_SignUpPacket.Name;
+
                             UnityEvent sceneMove = new UnityEvent();
-                            sceneMove.AddListener(() => SceneManager.LoadScene("Main Scene", LoadSceneMode.Single));
-                            Managers.Timer.Add(sceneMove, 0.0f);
+                            sceneMove.AddListener(() => SceneManager.LoadScene("Matching Scene", LoadSceneMode.Single));
+                            Managers.Timer.SetTimerNextUpdate(sceneMove);
                         }
+
+                        break;
+                    }
+                case PacketType.S_EnterRoom:
+                    {
+                        S_EnterRoomPacket s_SignUpPacket = JsonConvert.DeserializeObject<S_EnterRoomPacket>(json);
+
+                        UnityEvent sceneMove = new UnityEvent();
+                        sceneMove.AddListener(() => SceneManager.LoadScene("Baduk Scene", LoadSceneMode.Single));
+                        Managers.Timer.SetTimerNextUpdate(sceneMove);
+
+                        break;
+                    }
+                case PacketType.S_Chat:
+                    {
+                        S_Chat s_Chat = JsonConvert.DeserializeObject<S_Chat>(json);
+
+                        UnityEvent sceneMove = new UnityEvent();
+                        sceneMove.AddListener(() =>
+                        {
+                            GameObject chatBoxGo = GameObject.Find("UI_ChatBox");
+                            UI_ChatBox chatBox = chatBoxGo.GetComponent<UI_ChatBox>();
+                            chatBox.PushMessage(s_Chat.Sender, s_Chat.Message);
+                        });
+                        Managers.Timer.SetTimerNextUpdate(sceneMove);
 
                         break;
                     }

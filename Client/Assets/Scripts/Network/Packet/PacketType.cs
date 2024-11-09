@@ -10,5 +10,9 @@ namespace Network
         C_SignUp,
         S_SignUp,
 
+        S_EnterRoom,
+
+        C_Chat,
+        S_Chat,
     }
 }

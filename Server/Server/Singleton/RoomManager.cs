@@ -49,6 +49,8 @@ namespace Server
                         WaitingSessions.Remove(waitingSession);
                         room.Enter(waitingSession);
                     }
+
+                    room.Start();
                 }
             }
         }

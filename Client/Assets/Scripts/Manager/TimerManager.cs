@@ -52,7 +52,7 @@ namespace Timer
             }
         }
 
-        public TimerHandler Add(UnityEvent inAction, float inTime)
+        public TimerHandler SetTimer(UnityEvent inAction, float inTime)
         {
             lock (_lock)
             {
@@ -60,6 +60,11 @@ namespace Timer
                 _timers.AddLast(result);
                 return result;
             }    
+        }
+
+        public TimerHandler SetTimerNextUpdate(UnityEvent inAction)
+        {
+            return SetTimer(inAction, 0.0f);
         }
 
         public bool Remove(TimerHandler timer)

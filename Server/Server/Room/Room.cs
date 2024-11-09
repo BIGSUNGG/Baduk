@@ -10,12 +10,25 @@ namespace Server
     public class Room
     {
         private object _lock = new object();
-        public HashSet<ClientSession> Sessions = new HashSet<ClientSession>();
+        public List<ClientSession> Sessions = new List<ClientSession>();
         public int Id;
 
         public Room(int inId)
         {
             Id = inId;           
+        }
+
+        public void Start()
+        {
+            lock(_lock)
+            {
+                S_EnterRoomPacket s_EnterRoomPacket = new S_EnterRoomPacket();
+                foreach (var session in Sessions)
+                    s_EnterRoomPacket.Players.Add(session.Name);
+
+                SendAll(s_EnterRoomPacket);
+                LogManager.Instance.PushMessage($"Room Start");
+            }
         }
 
         public void Enter(ClientSession session)
@@ -42,12 +55,20 @@ namespace Server
             }
         }
 
-        public void SendAll(ClientSession sender, Packet packet)
+        public void SendAll(Packet packet)
+        {
+            SendAll(null, packet);
+        }
+
+        public void SendAll(Session sender, Packet packet)
         {
             lock (_lock)
             {
                 foreach (var session in Sessions)
                 {
+                    if (session == sender)
+                        continue;
+
                     session.Send(packet);
                 }
             }

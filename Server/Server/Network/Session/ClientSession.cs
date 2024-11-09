@@ -80,6 +80,8 @@ namespace Network
                             s_LogInPacket.Success = true;
                             s_LogInPacket.Name = account.Name;
                             Send(s_LogInPacket);
+
+                            RoomManager.Instance.RegisterSession(this);
                         }
                         else
                         {
@@ -88,6 +90,8 @@ namespace Network
                             S_LogInPacket s_LogInPacket = new S_LogInPacket();
                             s_LogInPacket.Success = false;
                             Send(s_LogInPacket);
+
+                            RoomManager.Instance.RegisterSession(this);
                         }
 
                         break;
@@ -118,6 +122,20 @@ namespace Network
                             S_SignUpPacket s_SignUpPacket = new S_SignUpPacket();
                             s_SignUpPacket.Success = false;
                             Send(s_SignUpPacket);
+                        }
+
+                        break;
+                    }
+                case PacketType.C_Chat:
+                    {
+                        C_Chat c_Chat = JsonConvert.DeserializeObject<C_Chat>(json);
+
+                        if(MyRoom != null)
+                        {
+                            S_Chat s_Chat = new S_Chat();
+                            s_Chat.Sender = Name;
+                            s_Chat.Message = c_Chat.Message;
+                            MyRoom.SendAll(this, s_Chat);
                         }
 
                         break;
