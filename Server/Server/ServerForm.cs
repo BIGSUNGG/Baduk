@@ -27,14 +27,14 @@ namespace Server
 
             timer = new Timer();
             timer.Interval = 10; 
-            timer.Tick += Timer_Tick; 
+            timer.Tick += Timer_Event; 
             timer.Start();
 
             textBox2.Multiline = true;
             textBox2.ReadOnly = true;
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Event(object sender, EventArgs e)
         {
             var q = LogManager.Instance.PopMessage();
             while(q.Count > 0)
@@ -43,9 +43,18 @@ namespace Server
             }
         }
 
-        public void RecvMessage(string message)
+        private void SendMessage()
         {
-            LogManager.Instance.PushMessage(message);
+            if (textBox1.Text == "")
+                return;
+
+            LogManager.Instance.PushMessage($"Server Send Message : {textBox1.Text}");
+
+            S_Chat s_Chat = new S_Chat();
+            s_Chat.Sender = "Server";
+            s_Chat.Message = textBox1.Text;
+            ClientSessionManager.Instance.SendAll(s_Chat);
+            textBox1.Text = "";
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -55,7 +64,7 @@ namespace Server
 
         private void Send_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "";
+            SendMessage();
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -75,7 +84,7 @@ namespace Server
                 e.Handled = true;
                 e.SuppressKeyPress = true;
 
-                textBox1.Text = "";
+                SendMessage();
             }
         }
     }

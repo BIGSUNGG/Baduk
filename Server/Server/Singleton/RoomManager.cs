@@ -10,10 +10,15 @@ namespace Server
     public class RoomManager
     {
         private object _lock = new object();
-        private List<Room> Rooms { get; set; } = new List<Room>();
-        private HashSet<ClientSession> WaitingSessions = new HashSet<ClientSession>();
-        int lastId = 0;
-        int RoomSize = 2;
+
+        List<Room> _rooms { get; set; } = new List<Room>();
+        int _lastRoomId = 0;
+        int _roomSize = 2;
+
+        // 매칭 중인 세션 목록
+        HashSet<ClientSession> _matchingSessions = new HashSet<ClientSession>();
+        // 매칭 가능한 최대 점수 차이
+        int _maxMatchingRange = 200;
 
         private static RoomManager _instance;
         public static RoomManager Instance 
@@ -29,29 +34,33 @@ namespace Server
 
         private RoomManager() { }
 
-        public void RegisterSession(ClientSession session)
+        public void RegisterSession(ClientSession inSession)
         {
             lock (_lock)
             {
-                WaitingSessions.Add(session);
-                LogManager.Instance.PushMessage($"Regist user {session.Name}");
+                LogManager.Instance.PushMessage($"Register user {inSession.Name}, Score : {inSession.Score}");
 
-                // 매칭 중인 유저가 2명 이상이라면
-                if(WaitingSessions.Count >= RoomSize)
+                foreach(var clientSession in _matchingSessions)
                 {
-                    Room room = new Room(lastId++);
-                    Rooms.Add(room);
-
-                    // 2명의 유저를 하나의 룸으로 참가
-                    for(int i = 0; i < RoomSize; i++)
+                    // 점수 차이가 200점 이하라면 매칭
+                    if(Math.Abs(clientSession.Score - inSession.Score) <= _maxMatchingRange)
                     {
-                        ClientSession waitingSession = WaitingSessions.First();
-                        WaitingSessions.Remove(waitingSession);
-                        room.Enter(waitingSession);
-                    }
+                        _matchingSessions.Remove(clientSession);
 
-                    room.Start();
+                        Room room = new Room(_lastRoomId++);
+                        _rooms.Add(room);
+
+                        room.Enter(inSession);
+                        room.Enter(clientSession);
+
+                        room.Start();
+
+                        return;
+                    }
                 }
+
+                // 매칭 실패 시 매칭 리스트에 추가
+                _matchingSessions.Add(inSession);
             }
         }
 
@@ -59,8 +68,8 @@ namespace Server
         {
             lock (_lock)
             {
-                LogManager.Instance.PushMessage($"Unregist user {session.Name}");
-                WaitingSessions.Remove(session);
+                LogManager.Instance.PushMessage($"Unregister user {session.Name}");
+                _matchingSessions.Remove(session);
             }
         }
     }

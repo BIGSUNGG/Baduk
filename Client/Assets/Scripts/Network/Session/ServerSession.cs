@@ -97,8 +97,11 @@ namespace Network
                         sceneMove.AddListener(() =>
                         {
                             GameObject chatBoxGo = GameObject.Find("UI_ChatBox");
-                            UI_ChatBox chatBox = chatBoxGo.GetComponent<UI_ChatBox>();
-                            chatBox.PushMessage(s_Chat.Sender, s_Chat.Message);
+                            if (chatBoxGo)
+                            {
+                                UI_ChatBox chatBox = chatBoxGo.GetComponent<UI_ChatBox>();
+                                chatBox.PushMessage(s_Chat.Sender, s_Chat.Message);
+                            }
                         });
                         Managers.Timer.SetTimerNextUpdate(sceneMove);
 

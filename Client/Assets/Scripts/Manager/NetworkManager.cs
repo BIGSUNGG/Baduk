@@ -11,9 +11,10 @@ namespace Network
 {
     public class NetworkManager
     {
-        ServerSession _serverSession = new ServerSession();
         public string Name { get; set; }
         public bool IsConnect => _serverSession._connecting;
+
+        ServerSession _serverSession = new ServerSession();
 
         public void Connect()
         {

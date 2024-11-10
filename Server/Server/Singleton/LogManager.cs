@@ -9,7 +9,7 @@ namespace Server
     public class LogManager
     {
         public object _lock = new object();
-        private Queue<string> messages = new Queue<string>();
+        Queue<string> _messages = new Queue<string>();
 
         private static LogManager _instance;
         public static LogManager Instance 
@@ -29,7 +29,7 @@ namespace Server
         {
             lock(_lock)
             {
-                messages.Enqueue(message);
+                _messages.Enqueue(message);
             }
         }
 
@@ -37,8 +37,8 @@ namespace Server
         {
             lock (_lock)
             {
-                Queue<string> result = messages;
-                messages = new Queue<string>();
+                Queue<string> result = _messages;
+                _messages = new Queue<string>();
 
                 if(result.Count > 0)
                 {

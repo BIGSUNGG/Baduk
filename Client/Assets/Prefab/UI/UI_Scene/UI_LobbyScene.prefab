@@ -1018,10 +1018,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253f5c4e734bdc345a2fffd77e4b6c11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logInBtn: {fileID: 6497269432144228283}
-  signUpBtn: {fileID: 2967109201853966994}
-  nameField: {fileID: 517166756361061828}
-  passwordField: {fileID: 5260127862313249042}
+  _logInBtn: {fileID: 6497269432144228283}
+  _signUpBtn: {fileID: 2967109201853966994}
+  _nameField: {fileID: 517166756361061828}
+  _passwordField: {fileID: 5260127862313249042}
 --- !u!223 &6398007981790167600
 Canvas:
   m_ObjectHideFlags: 0

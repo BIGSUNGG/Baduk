@@ -9,18 +9,18 @@ using UnityEngine.UI;
 
 public class UI_LobbyScene : UI_Scene
 {
-    public GameObject logInBtn;
-    public GameObject signUpBtn;
-
-    public GameObject nameField;
-    public GameObject passwordField;
+    public GameObject _logInBtn;
+    public GameObject _signUpBtn;
+                      
+    public GameObject _nameField;
+    public GameObject _passwordField;
 
     protected override void Start()
     {
         base.Start();
 
-        logInBtn.GetComponent<Button>().onClick.AddListener(OnClickLogInBtn);
-        signUpBtn.GetComponent<Button>().onClick.AddListener(OnClickSignInBtn);
+        _logInBtn.GetComponent<Button>().onClick.AddListener(OnClickLogInBtn);
+        _signUpBtn.GetComponent<Button>().onClick.AddListener(OnClickSignInBtn);
     }
 
     protected override void Update()
@@ -38,8 +38,8 @@ public class UI_LobbyScene : UI_Scene
 
     private void LogInSend()
     {
-        InputField name = nameField.GetComponent<InputField>();
-        InputField password = passwordField.GetComponent<InputField>();
+        InputField name = _nameField.GetComponent<InputField>();
+        InputField password = _passwordField.GetComponent<InputField>();
 
         C_LogInPacket loginPacket = new C_LogInPacket();
         loginPacket.Name = name.text;
@@ -60,8 +60,8 @@ public class UI_LobbyScene : UI_Scene
 
     private void SignUpSend()
     {
-        InputField name = nameField.GetComponent<InputField>();
-        InputField password = passwordField.GetComponent<InputField>();
+        InputField name = _nameField.GetComponent<InputField>();
+        InputField password = _passwordField.GetComponent<InputField>();
 
         C_SignUpPacket singupPacket = new C_SignUpPacket();
         singupPacket.Name = name.text;

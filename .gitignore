@@ -8,3 +8,34 @@ Client/Library
 Client/Logs
 Client/obj
 Client/Temp
+
+# User-specific files
+*.user
+*.userprefs
+*.pidb
+*.suo
+*.svd
+.vscode/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]evelopment/
+[Dd]evelopmentBuild/
+[Dd]istro/
+
+
+# Crashlytics
+crashlytics-build.properties
+
+# Uncomment if you have JetBrains Rider
+.idea/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer files (dependencies)
+*.pdb

@@ -14,6 +14,7 @@ namespace Network
         object _lock = new object();
         public string Name = string.Empty;
         public Room MyRoom { get; private set; }
+        public int Score;
 
         public void OnEnterRoom(Room room)
         {

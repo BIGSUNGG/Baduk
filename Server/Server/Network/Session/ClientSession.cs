@@ -73,8 +73,10 @@ namespace Network
                         bool success = account.Select(c_LoginPacket.Name, c_LoginPacket.Password);
                         if (success)
                         {
-                            Name = account.Name;
                             LogManager.Instance.PushMessage($"User {Name} Log In success");
+
+                            Name = account.Name;
+                            Score = account.Score;
 
                             S_LogInPacket s_LogInPacket = new S_LogInPacket();
                             s_LogInPacket.Success = true;
@@ -104,11 +106,13 @@ namespace Network
                         account.Name = signupPacket.Name;
                         account.Password = signupPacket.Password;
                         account.Score = 1000;
+
                         bool successs = account.Insert();
                         if (successs)
                         {
-                            Name = account.Name;
                             LogManager.Instance.PushMessage($"User {Name} Sign Up success");
+
+                            Name = account.Name;
 
                             S_SignUpPacket s_SignUpPacket = new S_SignUpPacket();
                             s_SignUpPacket.Success = true;
