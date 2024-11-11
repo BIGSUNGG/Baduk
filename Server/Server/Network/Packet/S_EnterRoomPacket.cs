@@ -4,11 +4,8 @@ namespace Network
 {
     public class S_EnterRoomPacket : Packet
     {
-        public List<string> Players = new List<string>();
+        public override PacketType Type => PacketType.S_EnterRoom;
 
-        public S_EnterRoomPacket()
-        {
-            Type = PacketType.S_EnterRoom; 
-        }
+        public List<string> Players = new List<string>();
     }
 }

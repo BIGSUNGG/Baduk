@@ -4,6 +4,6 @@ namespace Network
 {
     public class Packet
     {
-        public PacketType Type { get; set; } = PacketType.Unknown;
+        public virtual PacketType Type { get; set; } = PacketType.Unknown;
     }
 }

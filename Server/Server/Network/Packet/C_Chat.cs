@@ -2,11 +2,8 @@ namespace Network
 {
     public class C_Chat : Packet
     {
-        public string Message { get; set; }
+        public override PacketType Type => PacketType.C_Chat;
 
-        public C_Chat()
-        {
-            Type = PacketType.C_Chat; 
-        }
+        public string Message { get; set; }
     }
 }
