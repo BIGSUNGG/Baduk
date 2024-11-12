@@ -50,7 +50,7 @@ namespace Server
 
             LogManager.Instance.PushMessage($"Server Send Message : {textBox1.Text}");
 
-            S_Chat s_Chat = new S_Chat();
+            S_ChatPacket s_Chat = new S_ChatPacket();
             s_Chat.Sender = "Server";
             s_Chat.Message = textBox1.Text;
             ClientSessionManager.Instance.SendAll(s_Chat);

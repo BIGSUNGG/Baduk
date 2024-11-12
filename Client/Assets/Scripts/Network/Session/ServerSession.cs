@@ -83,6 +83,9 @@ namespace Network
                     {
                         S_EnterRoomPacket s_SignUpPacket = JsonConvert.DeserializeObject<S_EnterRoomPacket>(json);
 
+                        Managers.Network.MyStone = s_SignUpPacket.YourStone;
+                        Managers.Network.CurTurn = StoneType.Black;
+
                         UnityEvent sceneMove = new UnityEvent();
                         sceneMove.AddListener(() => SceneManager.LoadScene("Baduk Scene", LoadSceneMode.Single));
                         Managers.Timer.SetTimerNextUpdate(sceneMove);
@@ -91,7 +94,7 @@ namespace Network
                     }
                 case PacketType.S_Chat:
                     {
-                        S_Chat s_Chat = JsonConvert.DeserializeObject<S_Chat>(json);
+                        S_ChatPacket s_Chat = JsonConvert.DeserializeObject<S_ChatPacket>(json);
 
                         UnityEvent sceneMove = new UnityEvent();
                         sceneMove.AddListener(() =>
@@ -101,6 +104,27 @@ namespace Network
                             {
                                 UI_ChatBox chatBox = chatBoxGo.GetComponent<UI_ChatBox>();
                                 chatBox.PushMessage(s_Chat.Sender, s_Chat.Message);
+                            }
+                        });
+                        Managers.Timer.SetTimerNextUpdate(sceneMove);
+
+                        break;
+                    }
+                case PacketType.S_Move:
+                    {
+                        S_MovePacket s_Move = JsonConvert.DeserializeObject<S_MovePacket>(json);
+
+                        // 턴 전환
+                        Managers.Network.CurTurn = s_Move.Mover == StoneType.Black ? StoneType.White : StoneType.Black;
+
+                        UnityEvent sceneMove = new UnityEvent();
+                        sceneMove.AddListener(() =>
+                        {
+                            GameObject omokGo = GameObject.Find("UI_Omok");
+                            if (omokGo)
+                            {
+                                UI_Omok omok = omokGo.GetComponent<UI_Omok>();
+                                omok.OnMove(s_Move.Mover, s_Move.PosX, s_Move.PosY);
                             }
                         });
                         Managers.Timer.SetTimerNextUpdate(sceneMove);

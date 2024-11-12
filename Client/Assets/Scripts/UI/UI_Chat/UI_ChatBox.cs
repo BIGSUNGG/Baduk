@@ -44,7 +44,7 @@ public class UI_ChatBox : MonoBehaviour
 
     private void SendMessageServer(string message)
     {
-        C_Chat c_Chat = new C_Chat();
+        C_ChatPacket c_Chat = new C_ChatPacket();
         c_Chat.Message = message;
         Managers.Network.Send(c_Chat);
     }

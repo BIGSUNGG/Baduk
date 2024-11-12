@@ -11,7 +11,7 @@ namespace Server
     {
         private object _lock = new object();
 
-        List<Room> _rooms { get; set; } = new List<Room>();
+        List<OmokRoom> _rooms { get; set; } = new List<OmokRoom>();
         int _lastRoomId = 0;
         int _roomSize = 2;
 
@@ -47,13 +47,10 @@ namespace Server
                     {
                         _matchingSessions.Remove(clientSession);
 
-                        Room room = new Room(_lastRoomId++);
+                        OmokRoom room = new OmokRoom(_lastRoomId++);
                         _rooms.Add(room);
 
-                        room.Enter(inSession);
-                        room.Enter(clientSession);
-
-                        room.Start();
+                        room.Start(clientSession, inSession);
 
                         return;
                     }

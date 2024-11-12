@@ -9,8 +9,8 @@ public class Managers : MonoBehaviour
     const string ManagerObjectName = "@Managers";
 
     // Instance
-    public static Managers Instance { get { Init(); return _instance; } }
-    static Managers _instance;
+    public static Managers Instance { get { Init(); return s_instance; } }
+    static Managers s_instance;
 
     public static TimerManager Timer => Instance._timer;
     public static NetworkManager Network => Instance._network;
@@ -20,7 +20,7 @@ public class Managers : MonoBehaviour
 
     static void Init()
     {
-        if (_instance != null)
+        if (s_instance != null)
             return;
 
         GameObject go = GameObject.Find(ManagerObjectName);
@@ -30,7 +30,7 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
         }
 
-        _instance = go.GetOrAddComponent<Managers>();
+        s_instance = go.GetOrAddComponent<Managers>();
     }
 
     protected void Start()

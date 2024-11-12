@@ -14,5 +14,8 @@ namespace Network
 
         C_Chat,
         S_Chat,
+
+        C_Move,
+        S_Move,
     }
 }

@@ -13,6 +13,8 @@ namespace Network
     {
         public string Name { get; set; }
         public bool IsConnect => _serverSession._connecting;
+        public StoneType MyStone { get; set; }
+        public StoneType CurTurn { get; set; }
 
         ServerSession _serverSession = new ServerSession();
 

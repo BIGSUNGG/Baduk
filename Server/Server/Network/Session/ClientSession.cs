@@ -53,9 +53,6 @@ namespace Network
 
             ClientSessionManager.Instance.Remove(this);
             RoomManager.Instance.UnregisterSession(this);
-
-            if (MyRoom != null)
-                MyRoom.Leave(this);
         }
 
         protected override void OnRecvPacket(ArraySegment<byte> data)
@@ -132,14 +129,25 @@ namespace Network
                     }
                 case PacketType.C_Chat:
                     {
-                        C_Chat c_Chat = JsonConvert.DeserializeObject<C_Chat>(json);
+                        C_ChatPacket c_Chat = JsonConvert.DeserializeObject<C_ChatPacket>(json);
 
                         if(MyRoom != null)
                         {
-                            S_Chat s_Chat = new S_Chat();
+                            S_ChatPacket s_Chat = new S_ChatPacket();
                             s_Chat.Sender = Name;
                             s_Chat.Message = c_Chat.Message;
                             MyRoom.SendAll(this, s_Chat);
+                        }
+
+                        break;
+                    }
+                case PacketType.C_Move:
+                    {
+                        C_MovePacket c_Chat = JsonConvert.DeserializeObject<C_MovePacket>(json);
+
+                        if (MyRoom != null)
+                        {
+                            MyRoom.MoveAction(this, c_Chat);
                         }
 
                         break;

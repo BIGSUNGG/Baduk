@@ -58,18 +58,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Network\Packet\S_Chat.cs" />
+    <Compile Include="Network\Packet\C_MovePacket.cs" />
+    <Compile Include="Network\Packet\StoneType.cs" />
+    <Compile Include="Network\Packet\S_ChatPacket.cs" />
     <Compile Include="Network\Packet\C_SignUpPacket.cs" />
     <Compile Include="Network\Packet\C_LogInPacket.cs" />
     <Compile Include="Network\Packet\Packet.cs" />
     <Compile Include="Network\Packet\PacketType.cs" />
     <Compile Include="Network\Packet\S_LogInPacket.cs" />
     <Compile Include="Network\Packet\S_EnterRoomPacket.cs" />
-    <Compile Include="Network\Packet\C_Chat.cs" />
+    <Compile Include="Network\Packet\C_ChatPacket.cs" />
+    <Compile Include="Network\Packet\S_MovePacket.cs" />
     <Compile Include="Network\Packet\S_SignUpPacket.cs" />
     <Compile Include="Network\Session\ClientSession_Player.cs" />
     <Compile Include="Network\Session\Session.cs" />
-    <Compile Include="Room\Room.cs" />
+    <Compile Include="Room\OmokRoom.cs" />
     <Compile Include="ServerForm.cs">
       <SubType>Form</SubType>
     </Compile>

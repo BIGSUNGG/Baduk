@@ -1,6 +1,6 @@
 namespace Network
 {
-    public class S_Chat : Packet
+    public class S_ChatPacket : Packet
     {
         public override PacketType Type => PacketType.S_Chat;
 
