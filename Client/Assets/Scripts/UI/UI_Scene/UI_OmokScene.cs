@@ -1,4 +1,6 @@
-public class UI_BadukScene : UI_Scene
+using UnityEngine;
+
+public class UI_OmokScene : UI_Scene
 {
     protected override void Start()
     {
