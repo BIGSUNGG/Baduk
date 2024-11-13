@@ -141,13 +141,13 @@ namespace Network
 
                         break;
                     }
-                case PacketType.C_Move:
+                case PacketType.C_PlaceStone:
                     {
-                        C_MovePacket c_Chat = JsonConvert.DeserializeObject<C_MovePacket>(json);
+                        C_PlaceStonePacket c_Chat = JsonConvert.DeserializeObject<C_PlaceStonePacket>(json);
 
                         if (MyRoom != null)
                         {
-                            MyRoom.MoveAction(this, c_Chat);
+                            MyRoom.PlaceStone(this, c_Chat);
                         }
 
                         break;

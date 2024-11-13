@@ -39,11 +39,6 @@ namespace Server
             {
                 Queue<string> result = _messages;
                 _messages = new Queue<string>();
-
-                if(result.Count > 0)
-                {
-                    int a = 0;
-                }
                 return result;
             }
         }

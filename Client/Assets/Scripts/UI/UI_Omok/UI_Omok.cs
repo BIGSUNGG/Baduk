@@ -59,7 +59,7 @@ public class UI_Omok : MonoBehaviour
         if (Managers.Network.CurTurn != Managers.Network.MyStone)
             return;
 
-        C_MovePacket c_MovePacket = new C_MovePacket();
+        C_PlaceStonePacket c_MovePacket = new C_PlaceStonePacket();
         c_MovePacket.PosX = x;
         c_MovePacket.PosY = y;
         Managers.Network.Send(c_MovePacket);

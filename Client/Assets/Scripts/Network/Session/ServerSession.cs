@@ -110,9 +110,9 @@ namespace Network
 
                         break;
                     }
-                case PacketType.S_Move:
+                case PacketType.S_PlaceStone:
                     {
-                        S_MovePacket s_Move = JsonConvert.DeserializeObject<S_MovePacket>(json);
+                        S_PlaceStonePacket s_Move = JsonConvert.DeserializeObject<S_PlaceStonePacket>(json);
 
                         // 턴 전환
                         Managers.Network.CurTurn = s_Move.Mover == StoneType.Black ? StoneType.White : StoneType.Black;
@@ -125,6 +125,24 @@ namespace Network
                             {
                                 UI_Omok omok = omokGo.GetComponent<UI_Omok>();
                                 omok.OnMove(s_Move.Mover, s_Move.PosX, s_Move.PosY);
+                            }
+                        });
+                        Managers.Timer.SetTimerNextUpdate(sceneMove);
+
+                        break;
+                    }
+                case PacketType.S_GameFinish:
+                    {
+                        S_GameFinishPacket s_GameFinishPacket = JsonConvert.DeserializeObject<S_GameFinishPacket>(json);
+
+                        UnityEvent sceneMove = new UnityEvent();
+                        sceneMove.AddListener(() =>
+                        {
+                            GameObject badukSceneGo = GameObject.Find("UI_BadukScene");
+                            if (badukSceneGo)
+                            {
+                                UI_OmokScene omokScene = badukSceneGo.GetComponent<UI_OmokScene>();
+                                omokScene.OnFinishGame(s_GameFinishPacket.Winner);
                             }
                         });
                         Managers.Timer.SetTimerNextUpdate(sceneMove);

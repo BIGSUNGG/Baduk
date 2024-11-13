@@ -13,7 +13,6 @@ namespace Server
 
         List<OmokRoom> _rooms { get; set; } = new List<OmokRoom>();
         int _lastRoomId = 0;
-        int _roomSize = 2;
 
         // 매칭 중인 세션 목록
         HashSet<ClientSession> _matchingSessions = new HashSet<ClientSession>();

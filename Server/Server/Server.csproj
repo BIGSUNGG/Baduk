@@ -58,7 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Network\Packet\C_MovePacket.cs" />
+    <Compile Include="Network\Packet\C_PlaceStonePacket.cs" />
     <Compile Include="Network\Packet\StoneType.cs" />
     <Compile Include="Network\Packet\S_ChatPacket.cs" />
     <Compile Include="Network\Packet\C_SignUpPacket.cs" />
@@ -68,7 +68,8 @@
     <Compile Include="Network\Packet\S_LogInPacket.cs" />
     <Compile Include="Network\Packet\S_EnterRoomPacket.cs" />
     <Compile Include="Network\Packet\C_ChatPacket.cs" />
-    <Compile Include="Network\Packet\S_MovePacket.cs" />
+    <Compile Include="Network\Packet\S_PlaceStonePacket.cs" />
+    <Compile Include="Network\Packet\S_GameFinishPacket.cs" />
     <Compile Include="Network\Packet\S_SignUpPacket.cs" />
     <Compile Include="Network\Session\ClientSession_Player.cs" />
     <Compile Include="Network\Session\Session.cs" />
