@@ -70,7 +70,7 @@ namespace Network
                         bool success = account.Select(c_LoginPacket.Name, c_LoginPacket.Password);
                         if (success)
                         {
-                            LogManager.Instance.PushMessage($"User {Name} Log In success");
+                            LogManager.Instance.PushMessage($"User {account.Name} Log In success");
 
                             Name = account.Name;
                             Score = account.Score;

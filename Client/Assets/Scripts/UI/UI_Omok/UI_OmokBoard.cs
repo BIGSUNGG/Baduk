@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Network;
+using System;
 
-public class UI_Omok : MonoBehaviour
+public class UI_OmokBoard : MonoBehaviour
 {
+    [SerializeField]
+    GameObject _gameWin;
+    [SerializeField]
+    GameObject _gameLose;
+
     [SerializeField]
     GameObject _omokPostionPrefab;
     [SerializeField]
@@ -17,10 +23,16 @@ public class UI_Omok : MonoBehaviour
 
     List<List<UI_OmokPosition>> _positions;
 
+    OmokController _omok { get; set; }
+
     protected virtual void Start()
     {
-        _positions = new List<List<UI_OmokPosition>>(15);
+        _omok = GameObject.Find("OmokController").GetComponent<OmokController>();
+        if (_omok == null)
+            Debug.LogWarning("OmokController is null");
 
+        // 오목판 설정
+        _positions = new List<List<UI_OmokPosition>>(15);
         for (int x = 0; x < 15; x++)
         {
             int localX = x;
@@ -42,8 +54,11 @@ public class UI_Omok : MonoBehaviour
 
     protected virtual void Update()
     {
-        _myStoneText.GetComponent<Text>().text = $"나의 돌 : {(Managers.Network.MyStone == StoneType.Black ? "흑돌" : "백돌")}";
-        _curTurnText.GetComponent<Text>().text = $"현재 턴 : {(Managers.Network.CurTurn == StoneType.Black ? "흑돌" : "백돌")}";
+        if (_omok)
+        {
+            _myStoneText.GetComponent<Text>().text = $"나의 돌 : {(_omok.MyStone == StoneType.Black ? "흑돌" : "백돌")}";
+            _curTurnText.GetComponent<Text>().text = $"현재 턴 : {(_omok.CurTurn == StoneType.Black ? "흑돌" : "백돌")}";
+        }
     }
 
     public void OnMove(StoneType type, int x, int y)
@@ -55,13 +70,14 @@ public class UI_Omok : MonoBehaviour
 
     protected void OnClickPosition(int x, int y)
     {
-        // 내 턴이 아니라면
-        if (Managers.Network.CurTurn != Managers.Network.MyStone)
-            return;
+        _omok.Move(x, y);
+    }
 
-        C_PlaceStonePacket c_MovePacket = new C_PlaceStonePacket();
-        c_MovePacket.PosX = x;
-        c_MovePacket.PosY = y;
-        Managers.Network.Send(c_MovePacket);
+    public void OnFinishGame(StoneType winner)
+    {
+        if (_omok.MyStone == winner)
+            Instantiate(_gameWin, transform);
+        else
+            Instantiate(_gameLose, transform);
     }
 }

@@ -83,11 +83,32 @@ namespace Network
                     {
                         S_EnterRoomPacket s_SignUpPacket = JsonConvert.DeserializeObject<S_EnterRoomPacket>(json);
 
-                        Managers.Network.MyStone = s_SignUpPacket.YourStone;
-                        Managers.Network.CurTurn = StoneType.Black;
-
+                        // SceneMove
                         UnityEvent sceneMove = new UnityEvent();
-                        sceneMove.AddListener(() => SceneManager.LoadScene("Baduk Scene", LoadSceneMode.Single));
+                        sceneMove.AddListener(() =>
+                        {
+                            SceneManager.LoadScene("Baduk Scene", LoadSceneMode.Single);
+
+                            // OmokController
+                            UnityEvent omok = new UnityEvent();
+                            omok.AddListener(() =>
+                            {
+                                GameObject omokGo = GameObject.Find("OmokController");
+                                if (omokGo == null)
+                                {
+                                    Debug.Log("omokGo is null");
+                                    return;
+                                }
+
+                                OmokController omokController = omokGo.GetComponent<OmokController>();
+                                if (omokController)
+                                    omokController.OnStart(s_SignUpPacket.YourStone);
+                                else
+                                    Debug.Log("OmokController is null");
+                            });
+                            Managers.Timer.SetTimerNextUpdate(omok);
+                        });
+
                         Managers.Timer.SetTimerNextUpdate(sceneMove);
 
                         break;
@@ -115,15 +136,12 @@ namespace Network
                         S_PlaceStonePacket s_Move = JsonConvert.DeserializeObject<S_PlaceStonePacket>(json);
 
                         // 턴 전환
-                        Managers.Network.CurTurn = s_Move.Mover == StoneType.Black ? StoneType.White : StoneType.Black;
-
                         UnityEvent sceneMove = new UnityEvent();
                         sceneMove.AddListener(() =>
                         {
-                            GameObject omokGo = GameObject.Find("UI_Omok");
-                            if (omokGo)
+                            var omok = Behaviour.FindObjectOfType<OmokController>();
+                            if (omok)
                             {
-                                UI_Omok omok = omokGo.GetComponent<UI_Omok>();
                                 omok.OnMove(s_Move.Mover, s_Move.PosX, s_Move.PosY);
                             }
                         });
@@ -138,11 +156,10 @@ namespace Network
                         UnityEvent sceneMove = new UnityEvent();
                         sceneMove.AddListener(() =>
                         {
-                            GameObject badukSceneGo = GameObject.Find("UI_BadukScene");
-                            if (badukSceneGo)
+                            var omok = Behaviour.FindObjectOfType<OmokController>();
+                            if (omok)
                             {
-                                UI_OmokScene omokScene = badukSceneGo.GetComponent<UI_OmokScene>();
-                                omokScene.OnFinishGame(s_GameFinishPacket.Winner);
+                                omok.OnFinish(s_GameFinishPacket.Winner);
                             }
                         });
                         Managers.Timer.SetTimerNextUpdate(sceneMove);

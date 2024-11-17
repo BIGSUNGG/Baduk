@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 4619265505581600418}
   - component: {fileID: 2381692168285408275}
   m_Layer: 5
-  m_Name: UI_Omok
+  m_Name: UI_OmokBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -199,6 +199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62287bcdd63ba2a4e811843d7944fd78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameWin: {fileID: 261774146187086021, guid: 2ae3ad2dfddf3a940aac36c3d7d27ee4, type: 3}
+  _gameLose: {fileID: 261774146187086021, guid: d6b85f2bf02f9b446ae1618664810edf, type: 3}
   _omokPostionPrefab: {fileID: 3599823515764070098, guid: 68824d0f9c972e94d8e75fa4f1ecf528, type: 3}
   _positionGrid: {fileID: 2920224689219488221}
   _myStoneText: {fileID: 6411559847365471301}

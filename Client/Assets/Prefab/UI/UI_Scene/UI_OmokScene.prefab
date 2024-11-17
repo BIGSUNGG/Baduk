@@ -152,8 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e69147c02c7d2840aae7c8c247c05e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameWin: {fileID: 261774146187086021, guid: 2ae3ad2dfddf3a940aac36c3d7d27ee4, type: 3}
-  _gameLose: {fileID: 261774146187086021, guid: d6b85f2bf02f9b446ae1618664810edf, type: 3}
 --- !u!114 &2307627752380466456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,7 +263,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1836874611160189204, guid: 00d17512583b4c64284a473f04cced10, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1836874611160189204, guid: 00d17512583b4c64284a473f04cced10, type: 3}
       propertyPath: m_LocalRotation.w
@@ -305,7 +303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3599823515764070098, guid: 00d17512583b4c64284a473f04cced10, type: 3}
       propertyPath: m_Name
-      value: UI_Omok
+      value: UI_OmokBoard
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4319341994134227015, guid: 00d17512583b4c64284a473f04cced10, type: 3}

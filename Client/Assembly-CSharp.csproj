@@ -9,8 +9,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{12F44184-A422-5F27-22E6-507969043F15}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -56,20 +55,21 @@
     <UnityVersion>2022.3.19f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="F:\Unity\2022.3.19f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="F:\Unity\2022.3.19f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Extension\Extension.cs" />
-    <Compile Include="Assets\Scripts\Network\Packet\S_GameFinishPacket.cs" />
     <Compile Include="Assets\Scripts\UI\UI_Omok\UI_OmokPosition.cs" />
     <Compile Include="Assets\Scripts\UI\UI_Scene\UI_OmokScene.cs" />
     <Compile Include="Assets\Scripts\UI\UI_Scene\UI_Scene.cs" />
     <Compile Include="Assets\Scripts\Manager\TimerManager.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\Packet.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\S_EnterRoomPacket.cs" />
+    <Compile Include="Assets\Scripts\Network\Packet\S_GameFinishPacket.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\S_ChatPacket.cs" />
+    <Compile Include="Assets\Scripts\Network\Packet\C_PlaceStonePacket.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\StoneType.cs" />
     <Compile Include="Assets\Scripts\UI\UI_Scene\UI_LobbyScene.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\S_SignUpPacket.cs" />
@@ -77,14 +77,14 @@
     <Compile Include="Assets\Scripts\Manager\Managers.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\C_LogInPacket.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\PacketType.cs" />
+    <Compile Include="Assets\Scripts\Network\Packet\S_PlaceStonePacket.cs" />
     <Compile Include="Assets\Scripts\Network\Core\Connector.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\C_ChatPacket.cs" />
-    <Compile Include="Assets\Scripts\Network\Packet\C_PlaceStonePacket.cs" />
+    <Compile Include="Assets\Scripts\Game\Omok\OmokController.cs" />
     <Compile Include="Assets\Scripts\UI\UI_Chat\UI_ChatBox.cs" />
     <Compile Include="Assets\Scripts\Network\Session\Session.cs" />
-    <Compile Include="Assets\Scripts\Network\Packet\S_PlaceStonePacket.cs" />
-    <Compile Include="Assets\Scripts\UI\UI_Omok\UI_Omok.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\C_SignUpPacket.cs" />
+    <Compile Include="Assets\Scripts\UI\UI_Omok\UI_OmokBoard.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\S_LogInPacket.cs" />
     <Compile Include="Assets\Scripts\UI\UI_Scene\UI_MatchingScene.cs" />
     <Compile Include="Assets\Scripts\Network\Session\ServerSession.cs" />
