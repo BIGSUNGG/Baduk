@@ -36,7 +36,7 @@ public class UI_ChatBox : MonoBehaviour
     {
         if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) && _inputField.text != "")
         {
-            PushMessage(Managers.Network.Name, input);
+            PushMessage(Managers.Network.Name, input);            
             SendMessageServer(input);
             _inputField.text = "";
         }
@@ -58,7 +58,7 @@ public class UI_ChatBox : MonoBehaviour
         }
 
         GameObject newText = Instantiate(_textPrefab, _chatPanel.transform);
-        newText.GetComponent<Text>().text = $"{sender} : {message}";
+        newText.GetComponent<Text>().text = $" {sender} : {message}";
 
         _texts.Enqueue(newText);
     }

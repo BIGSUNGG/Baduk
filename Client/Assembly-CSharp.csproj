@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\UI\UI_Scene\UI_OmokScene.cs" />
     <Compile Include="Assets\Scripts\UI\UI_Scene\UI_Scene.cs" />
     <Compile Include="Assets\Scripts\Manager\TimerManager.cs" />
+    <Compile Include="Assets\Scripts\UI\UI_Chat\UI_ChatText.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\Packet.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\S_EnterRoomPacket.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\S_GameFinishPacket.cs" />

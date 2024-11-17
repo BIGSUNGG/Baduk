@@ -93,18 +93,8 @@ namespace Network
                             UnityEvent omok = new UnityEvent();
                             omok.AddListener(() =>
                             {
-                                GameObject omokGo = GameObject.Find("OmokController");
-                                if (omokGo == null)
-                                {
-                                    Debug.Log("omokGo is null");
-                                    return;
-                                }
-
-                                OmokController omokController = omokGo.GetComponent<OmokController>();
-                                if (omokController)
-                                    omokController.OnStart(s_SignUpPacket.YourStone);
-                                else
-                                    Debug.Log("OmokController is null");
+                                OmokController omokController = GameObject.Find("OmokController").GetComponent<OmokController>();
+                                omokController.OnStart(s_SignUpPacket.YourStone);
                             });
                             Managers.Timer.SetTimerNextUpdate(omok);
                         });

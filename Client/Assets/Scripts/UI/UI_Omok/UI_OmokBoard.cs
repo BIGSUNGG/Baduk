@@ -46,7 +46,7 @@ public class UI_OmokBoard : MonoBehaviour
 
                 GameObject omokPositionGo = Instantiate(_omokPostionPrefab, _positionGrid.transform);
                 UI_OmokPosition omokPosition = omokPositionGo.GetComponent<UI_OmokPosition>();
-                omokPosition._positionButton.onClick.AddListener(() => OnClickPosition(localX, localY));
+                omokPosition.OnClick.AddListener(() => OnClickPosition(localX, localY));
                 positionsRow.Add(omokPosition);
             }
         }
@@ -64,8 +64,10 @@ public class UI_OmokBoard : MonoBehaviour
     public void OnMove(StoneType type, int x, int y)
     {
         UI_OmokPosition position = _positions[x][y];
-        position._positionButton.enabled = false;
-        position._positionImage.color = type == StoneType.Black ? new Color(0, 0, 0, 255) : new Color(255, 255, 255, 255);
+        if (position == null)
+            return;
+
+        position.PlaceStone(type);
     }
 
     protected void OnClickPosition(int x, int y)

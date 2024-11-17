@@ -71,12 +71,20 @@ namespace Server
             SendAll(null, packet);
         }
 
+        /// <summary>
+        /// Sender을 제외한 모두에게 패킷 전송
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="packet"></param>
         public void SendAll(Session sender, Packet packet)
         {
             lock (_lock)
             {
-                _whitePlayer.Send(packet);
-                _blackPlayer.Send(packet);
+                if(_whitePlayer != sender)
+                    _whitePlayer.Send(packet);
+
+                if(_blackPlayer != sender)
+                    _blackPlayer.Send(packet);
             }
         }
 
