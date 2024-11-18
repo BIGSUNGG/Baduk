@@ -16,8 +16,7 @@ namespace ServerDB
         public int Score { get; set; }
 
         // DB 접속 문자열
-        //private static string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=GameDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
-        private static string connectionString = "Data Source=DESKTOP-1F4264U\\SQLEXPRESS;Initial Catalog=Baduk;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+        private static string connectionString = "Data Source=DESKTOP-1F4264U\\SQLEXPRESS;Initial Catalog=Omok;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
 
         public bool Select(string inName, string inPassword)
         {
@@ -116,6 +115,100 @@ namespace ServerDB
             };
 
             return (int)DoQuery(query);
+        }
+
+        /// <summary>
+        /// 계정의 점수를 기준으로 순위를 구함
+        /// </summary>
+        /// <returns></returns>
+        public int GetRank()
+        {
+            // 성공 여부를 반환하는 Query 설정
+            Func<SqlCommand, object> query = command =>
+            {
+                // INSERT문 설정
+                command.CommandText = @"
+WITH RankInfo AS 
+(
+	SELECT id, name, password, score, CAST(ROW_NUMBER() OVER (ORDER BY score DESC) AS INT) AS rank
+	FROM Account
+)
+SELECT TOP (1) rank
+FROM RankInfo
+WHERE id = @id
+";
+
+                command.Parameters.Add(new SqlParameter("@id", Id));
+
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read() == false)
+                    return -1;
+
+                int index = 0;
+                int rank = reader.GetInt32(index++);
+                reader.Close();
+
+                return rank;
+            };
+
+            return (int)DoQuery(query);
+        }
+
+        /// <summary>
+        /// 점수를 기준으로 순위가 top 위부터 bottom 위까지의 계정 찾기
+        /// </summary>
+        /// <param name="leftRank">1이상의 수</param>
+        /// <param name="rightRank">leftRank이상의 수</param>
+        /// <returns>leftRank ~ rightRank 까지의 유저들</returns>
+        public static List<AccountGateWay> GetTopRank(int leftRank, int rightRank)
+        {
+            Func<SqlCommand, List<AccountGateWay>> query = command =>
+            {
+                List<AccountGateWay> result = new List<AccountGateWay>();
+                // SELECT문 설정
+                command.CommandText = @"
+WITH RankInfo AS 
+(
+	SELECT id, name, password, score, ROW_NUMBER() OVER (ORDER BY score DESC) AS rank
+	FROM Account
+)
+SELECT id, name, password, score, rank
+FROM RankInfo
+WHERE Rank Between @leftRank And @rightRank
+                ";
+                command.Parameters.Add(new SqlParameter("@leftRank", leftRank));
+                command.Parameters.Add(new SqlParameter("@rightRank", rightRank));
+
+                // SELECT문 실행 후 읽기 시도
+                SqlDataReader reader = command.ExecuteReader();
+
+                for (int i = 0; i <= rightRank - leftRank; i++)
+                {
+                    if (reader.Read() == false)
+                        return null;
+
+                    // 읽은 값 불러오기
+                    int index = 0;
+
+                    AccountGateWay account = new AccountGateWay();
+
+                    int id = reader.GetInt32(index++);
+                    string name = reader.GetString(index++);
+                    string password = reader.GetString(index++);
+                    int score = reader.GetInt32(index++);
+
+                    account.Id = id;
+                    account.Name = name;
+                    account.Password = password;
+                    account.Score = score;
+                    result.Add(account);
+                }
+                reader.Close();
+
+                return result;
+            };
+
+            return (List<AccountGateWay>)DoQuery(query);
         }
 
         /// <summary>

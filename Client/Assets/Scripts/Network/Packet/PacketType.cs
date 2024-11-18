@@ -10,6 +10,7 @@ namespace Network
         C_SignUp,
         S_SignUp,
 
+        C_StartMatch,
         S_EnterRoom,
 
         C_Chat,
@@ -19,5 +20,8 @@ namespace Network
         S_PlaceStone,
 
         S_GameFinish,
+
+        C_RequestTopRank,
+        S_ResponseTopRank,
     }
 }

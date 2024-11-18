@@ -59,7 +59,7 @@ namespace Network
                             Managers.Network.Name = s_LoginPacket.Name;
 
                             UnityEvent sceneMove = new UnityEvent();
-                            sceneMove.AddListener(() => SceneManager.LoadScene("Matching Scene", LoadSceneMode.Single));
+                            sceneMove.AddListener(() => SceneManager.LoadScene("Lobby Scene", LoadSceneMode.Single));
                             Managers.Timer.SetTimerNextUpdate(sceneMove);                           
                         }
 
@@ -73,7 +73,7 @@ namespace Network
                             Managers.Network.Name = s_SignUpPacket.Name;
 
                             UnityEvent sceneMove = new UnityEvent();
-                            sceneMove.AddListener(() => SceneManager.LoadScene("Matching Scene", LoadSceneMode.Single));
+                            sceneMove.AddListener(() => SceneManager.LoadScene("Lobby Scene", LoadSceneMode.Single));
                             Managers.Timer.SetTimerNextUpdate(sceneMove);
                         }
 
@@ -151,6 +151,27 @@ namespace Network
                             {
                                 omok.OnFinish(s_GameFinishPacket.Winner);
                             }
+                        });
+                        Managers.Timer.SetTimerNextUpdate(sceneMove);
+
+                        break;
+                    }
+                case PacketType.S_ResponseTopRank:
+                    {
+                        S_ResponseTopRankPacket s_ResponseTopRankPacket = JsonConvert.DeserializeObject<S_ResponseTopRankPacket>(json);
+
+                        UnityEvent sceneMove = new UnityEvent();
+                        sceneMove.AddListener(() =>
+                        {
+                            var lobbyGo = GameObject.Find("UI_LobbyScene");
+                            if (lobbyGo == null)
+                                return;
+
+                            UI_LobbyScene lobby = lobbyGo.GetComponent<UI_LobbyScene>();
+                            if (lobby == null)
+                                return;
+
+                            lobby.SetUserInfo(s_ResponseTopRankPacket.Users);
                         });
                         Managers.Timer.SetTimerNextUpdate(sceneMove);
 

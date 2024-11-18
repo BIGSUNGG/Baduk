@@ -80,8 +80,6 @@ namespace Network
                             s_LogInPacket.Success = true;
                             s_LogInPacket.Name = Account.Name;
                             Send(s_LogInPacket);
-
-                            RoomManager.Instance.RegisterSession(this);
                         }
                         else
                         {
@@ -90,8 +88,6 @@ namespace Network
                             S_LogInPacket s_LogInPacket = new S_LogInPacket();
                             s_LogInPacket.Success = false;
                             Send(s_LogInPacket);
-
-                            RoomManager.Instance.RegisterSession(this);
                         }
 
                         break;
@@ -128,6 +124,14 @@ namespace Network
 
                         break;
                     }
+                case PacketType.C_StartMatch:
+                    {
+                        C_StartMatchPacket c_StartMatchPacket = JsonConvert.DeserializeObject<C_StartMatchPacket>(json);
+
+                        RoomManager.Instance.RegisterSession(this);
+
+                        break;
+                    }
                 case PacketType.C_Chat:
                     {
                         C_ChatPacket c_Chat = JsonConvert.DeserializeObject<C_ChatPacket>(json);
@@ -151,6 +155,46 @@ namespace Network
                             MyRoom.PlaceStone(this, c_Chat);
                         }
 
+                        break;
+                    }
+                case PacketType.C_RequestTopRank:
+                    {
+                        C_RequestTopRankPacket c_RequestTopRankPacket = JsonConvert.DeserializeObject<C_RequestTopRankPacket>(json);
+
+                        S_ResponseTopRankPacket s_ResponseTopRankPacket = new S_ResponseTopRankPacket();
+                       
+                        int leftRank;
+                        int rightRank;
+
+                        if (c_RequestTopRankPacket.RequestType == RequestTopRankType.NearRank)
+                        {
+                            int myRank = Account.GetRank();
+                            // leftRank가 1보다 작을 수 없도록
+                            leftRank = myRank - 4;
+                            leftRank = leftRank < 1 ? 1 : leftRank;
+                            rightRank = leftRank + 9;
+                        }
+                        else if (c_RequestTopRankPacket.RequestType == RequestTopRankType.TopRank)
+                        {
+                            leftRank = 1;
+                            rightRank = 10;
+                        }
+                        else
+                        {
+                            throw new NotImplementedException();
+                        }
+
+                        List<AccountGateWay> accounts = AccountGateWay.GetTopRank(leftRank, rightRank);
+                        for (int i = 0; i < accounts.Count; i++)
+                        {
+                            UserInfo info = new UserInfo();
+                            info.Name = accounts[i].Name;
+                            info.Score = accounts[i].Score;
+                            info.Rank = i + leftRank;
+                            s_ResponseTopRankPacket.Users.Add(info);
+                        }
+
+                        Send(s_ResponseTopRankPacket);
                         break;
                     }
                 default:

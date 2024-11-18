@@ -58,6 +58,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Network\Packet\C_StartMatchPacket.cs" />
+    <Compile Include="Network\Packet\UserInfo.cs" />
+    <Compile Include="Network\Packet\S_ResponseTopRankPacket.cs" />
+    <Compile Include="Network\Packet\C_RequestTopRankPacket.cs" />
     <Compile Include="Network\Packet\C_PlaceStonePacket.cs" />
     <Compile Include="Network\Packet\StoneType.cs" />
     <Compile Include="Network\Packet\S_ChatPacket.cs" />

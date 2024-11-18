@@ -31,6 +31,8 @@ namespace Server
 
             textBox2.Multiline = true;
             textBox2.ReadOnly = true;
+
+            LogManager.Instance.PushMessage("Start Server");
         }
 
         private void Timer_Event(object sender, EventArgs e)

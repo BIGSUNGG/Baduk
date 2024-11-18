@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-// TODO : OmokController와 UI_OmokBoard의 결합도 낮추기
+// TODO : OmokController와 UI_OmokBoard의 결합도 낮추기 (옵저버 패턴을 사용하여)
 public class OmokController : MonoBehaviour
 {
     public StoneType MyStone { get; private set; } = StoneType.None;
     public StoneType CurTurn { get; private set; } = StoneType.Black;
 
+    // TODO : 이런 거 없애기
     UI_OmokBoard _omokUI { get; set; }
 
     protected virtual void Start()

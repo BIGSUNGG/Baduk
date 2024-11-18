@@ -46,12 +46,11 @@ namespace Timer
 
                 foreach (var timer in finishTimers)
                 {
-                    try 
+                    _timers.Remove(timer);
+                    try
                     {
                         if (timer.Action != null)
                             timer.Action.Invoke();
-
-                        _timers.Remove(timer);
                     }
                     catch (System.Exception ex)
                     {

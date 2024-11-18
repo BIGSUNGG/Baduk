@@ -5,22 +5,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_LobbyScene : UI_Scene
 {
-    public GameObject _logInBtn;
-    public GameObject _signUpBtn;
-                      
-    public GameObject _nameField;
-    public GameObject _passwordField;
+    [SerializeField]
+    GameObject _matchButtonGo;
+    Button _matchButton;
+    [SerializeField]
+    GameObject _topRankButtonGo;
+    Button _topRankButton;
+    [SerializeField]
+    GameObject _nearRankButtonGo;
+    Button _nearRankButton;
+
+    [SerializeField]
+    GameObject _rankGridGo;
+    [SerializeField]
+    GameObject _rankPrefab;
 
     protected override void Start()
     {
         base.Start();
 
-        _logInBtn.GetComponent<Button>().onClick.AddListener(OnClickLogInBtn);
-        _signUpBtn.GetComponent<Button>().onClick.AddListener(OnClickSignInBtn);
+        _matchButton = _matchButtonGo.GetComponent<Button>();
+        _matchButton.onClick.AddListener(OnClickMatchStartButton);
+
+        _topRankButton = _topRankButtonGo.GetComponent<Button>();
+        _topRankButton.onClick.AddListener(OnClickTopRankButton);
+
+        _nearRankButton = _nearRankButtonGo.GetComponent<Button>();
+        _nearRankButton.onClick.AddListener(OnClickNearRankButton);
     }
 
     protected override void Update()
@@ -28,56 +44,40 @@ public class UI_LobbyScene : UI_Scene
         base.Update();
     }
 
-    private void OnClickLogInBtn()
+    public void OnClickMatchStartButton()
     {
-        Debug.Log("On Click LogInWay Button");  
+        C_StartMatchPacket c_StartMatchPacket = new C_StartMatchPacket();
+        Managers.Network.Send(c_StartMatchPacket);
 
-        Managers.Network.Connect();
-        StartCoroutine(WaitingConnectServer(LogInSend));       
+        SceneManager.LoadScene("Match Scene", LoadSceneMode.Single);
     }
 
-    private void LogInSend()
+    public void OnClickTopRankButton()
     {
-        InputField name = _nameField.GetComponent<InputField>();
-        InputField password = _passwordField.GetComponent<InputField>();
-
-        C_LogInPacket loginPacket = new C_LogInPacket();
-        loginPacket.Name = name.text;
-        loginPacket.Password = password.text;
-        Managers.Network.Send(loginPacket);        
-
-        name.text = "";
-        password.text = "";
+        C_RequestTopRankPacket c_RequestTopRankPacket = new C_RequestTopRankPacket();
+        c_RequestTopRankPacket.RequestType = RequestTopRankType.TopRank;
+        Managers.Network.Send(c_RequestTopRankPacket);
     }
 
-    private void OnClickSignInBtn()
+    public void OnClickNearRankButton()
     {
-        Debug.Log("On Click SignInWay Button");
-
-        Managers.Network.Connect();
-        StartCoroutine(WaitingConnectServer(SignUpSend));
+        C_RequestTopRankPacket c_RequestTopRankPacket = new C_RequestTopRankPacket();
+        c_RequestTopRankPacket.RequestType = RequestTopRankType.NearRank;
+        Managers.Network.Send(c_RequestTopRankPacket);
     }
 
-    private void SignUpSend()
+    public void SetUserInfo(List<UserInfo> users)
     {
-        InputField name = _nameField.GetComponent<InputField>();
-        InputField password = _passwordField.GetComponent<InputField>();
+        foreach (Transform child in _rankGridGo.transform)
+        {
+            Destroy(child.gameObject);
+        }
 
-        C_SignUpPacket singupPacket = new C_SignUpPacket();
-        singupPacket.Name = name.text;
-        singupPacket.Password = password.text;
-        Managers.Network.Send(singupPacket);
-
-        name.text = "";
-        password.text = "";
-    }
-
-    private IEnumerator WaitingConnectServer(Action action)
-    {
-        if (Managers.Network.IsConnect == false)
-            yield return null;
-
-        action.Invoke();
-        yield break;
+        for (int i = 0; i < users.Count; i++)
+        {
+            GameObject newGo = Instantiate(_rankPrefab, _rankGridGo.transform);
+            UI_Rank uiRank = newGo.GetComponent<UI_Rank>();
+            uiRank.Init(users[i].Rank, users[i].Name, users[i].Score);
+        }
     }
 }

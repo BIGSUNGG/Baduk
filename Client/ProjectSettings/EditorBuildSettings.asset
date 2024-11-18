@@ -6,10 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Lobby Scene.unity
+    path: Assets/Scenes/Login Scene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/Matching Scene.unity
+    path: Assets/Scenes/Lobby Scene.unity
+    guid: 3df36ce2090aa0c429c554a5f62ba338
+  - enabled: 1
+    path: Assets/Scenes/Match Scene.unity
     guid: ed616dc918256024586d07e775d2b1ea
   - enabled: 1
     path: Assets/Scenes/Baduk Scene.unity
