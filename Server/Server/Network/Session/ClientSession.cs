@@ -16,6 +16,7 @@ namespace Network
     public partial class ClientSession : Session
     {
         public readonly int Id;
+        public AccountGateWay Account { get; set; }
 
         public ClientSession(int inId)
         {
@@ -66,18 +67,18 @@ namespace Network
                     {
                         C_LogInPacket c_LoginPacket = JsonConvert.DeserializeObject<C_LogInPacket>(json);
 
-                        AccountGateWay account = new AccountGateWay();
-                        bool success = account.Select(c_LoginPacket.Name, c_LoginPacket.Password);
+                        Account = new AccountGateWay();
+                        bool success = Account.Select(c_LoginPacket.Name, c_LoginPacket.Password);
                         if (success)
                         {
-                            LogManager.Instance.PushMessage($"User {account.Name} Log In success");
+                            LogManager.Instance.PushMessage($"User {Account.Name} Log In success");
 
-                            Name = account.Name;
-                            Score = account.Score;
+                            Name = Account.Name;
+                            Score = Account.Score;
 
                             S_LogInPacket s_LogInPacket = new S_LogInPacket();
                             s_LogInPacket.Success = true;
-                            s_LogInPacket.Name = account.Name;
+                            s_LogInPacket.Name = Account.Name;
                             Send(s_LogInPacket);
 
                             RoomManager.Instance.RegisterSession(this);
@@ -99,21 +100,21 @@ namespace Network
                     {
                         C_SignUpPacket signupPacket = JsonConvert.DeserializeObject<C_SignUpPacket>(json);
 
-                        AccountGateWay account = new AccountGateWay();
-                        account.Name = signupPacket.Name;
-                        account.Password = signupPacket.Password;
-                        account.Score = 1000;
+                        Account = new AccountGateWay();
+                        Account.Name = signupPacket.Name;
+                        Account.Password = signupPacket.Password;
+                        Account.Score = 1000;
 
-                        bool successs = account.Insert();
+                        bool successs = Account.Insert();
                         if (successs)
                         {
                             LogManager.Instance.PushMessage($"User {Name} Sign Up success");
 
-                            Name = account.Name;
+                            Name = Account.Name;
 
                             S_SignUpPacket s_SignUpPacket = new S_SignUpPacket();
                             s_SignUpPacket.Success = true;
-                            s_SignUpPacket.Name = account.Name;
+                            s_SignUpPacket.Name = Account.Name;
                             Send(s_SignUpPacket);
                         }
                         else

@@ -38,7 +38,7 @@ public class UI_OmokPosition : MonoBehaviour
         OnClick.Invoke();
     }
 
-    public void PlaceStone(StoneType stoneType)
+    public void OnPlaceStone(StoneType stoneType)
     {
         _positionButton.enabled = false;
         _positionImage.color = (stoneType == StoneType.Black ? new Color(0, 0, 0, 255) : new Color(255, 255, 255, 255));

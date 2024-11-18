@@ -90,11 +90,12 @@ namespace ServerDB
             Func<SqlCommand, object> query = command =>
             {
                 // UPDATE문 설정
-                command.CommandText = "UPDATE Account SET name=@name, password=@password, score=@score where id=@id";
+                command.CommandText = "UPDATE Account SET name=@name, password=@password, score=@score WHERE id=@id";
 
                 command.Parameters.Add(new SqlParameter("@name", Name));
                 command.Parameters.Add(new SqlParameter("@password", Password));
                 command.Parameters.Add(new SqlParameter("@score", Score));
+                command.Parameters.Add(new SqlParameter("@id", Id));
 
                 return command.ExecuteNonQuery();
             };

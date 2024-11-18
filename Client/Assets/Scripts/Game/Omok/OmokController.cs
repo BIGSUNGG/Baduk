@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+// TODO : OmokController와 UI_OmokBoard의 결합도 낮추기
 public class OmokController : MonoBehaviour
 {
     public StoneType MyStone { get; private set; } = StoneType.None;
@@ -21,7 +22,7 @@ public class OmokController : MonoBehaviour
         
     }
 
-    public void Move(int posX, int posY)
+    public void Place(int posX, int posY)
     {
         // 내 턴이 아니라면
         if (CurTurn != MyStone)
@@ -39,10 +40,10 @@ public class OmokController : MonoBehaviour
         MyStone = myStone;
     }
 
-    public void OnMove(StoneType mover, int posX, int posY)
+    public void OnPlace(StoneType mover, int posX, int posY)
     {
         CurTurn = (mover == StoneType.Black ? StoneType.White : StoneType.Black);
-        _omokUI.OnMove(mover, posX, posY);
+        _omokUI.OnPlace(mover, posX, posY);
     }
 
     public void OnFinish(StoneType winner)

@@ -61,20 +61,35 @@ public class UI_OmokBoard : MonoBehaviour
         }
     }
 
-    public void OnMove(StoneType type, int x, int y)
+    /// <summary>
+    /// 수가 두어졌을 경우 호출
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void OnPlace(StoneType type, int x, int y)
     {
         UI_OmokPosition position = _positions[x][y];
         if (position == null)
             return;
 
-        position.PlaceStone(type);
+        position.OnPlaceStone(type);
     }
 
+    /// <summary>
+    /// 오목판의 위치 클릭 시 호출
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
     protected void OnClickPosition(int x, int y)
     {
-        _omok.Move(x, y);
+        _omok.Place(x, y);
     }
 
+    /// <summary>
+    /// 게임 종료 시 호출
+    /// </summary>
+    /// <param name="winner">이긴 돌</param>
     public void OnFinishGame(StoneType winner)
     {
         if (_omok.MyStone == winner)

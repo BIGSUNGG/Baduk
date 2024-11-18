@@ -128,13 +128,24 @@ namespace Server
                     S_GameFinishPacket s_GameFinishPacket = new S_GameFinishPacket();
                     s_GameFinishPacket.Winner = _curTurn;
                     SendAll(s_GameFinishPacket);
+
+                    // White
+                    {
+                        _whitePlayer.Account.Score += _curTurn == StoneType.White ? 100 : -100;
+                        int s = _whitePlayer.Account.Update();
+                    }
+
+                    // Black
+                    {
+                        _blackPlayer.Account.Score += _curTurn == StoneType.Black ? 100 : -100;
+                        int s = _blackPlayer.Account.Update();
+                    }
                 }
                 else
                 {
                     // 턴 전환
                     _curTurn = _curTurn == StoneType.Black ? StoneType.White : StoneType.Black;
                 }
-
             }
         }
 

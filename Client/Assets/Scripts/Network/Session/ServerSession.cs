@@ -132,7 +132,7 @@ namespace Network
                             var omok = Behaviour.FindObjectOfType<OmokController>();
                             if (omok)
                             {
-                                omok.OnMove(s_Move.Mover, s_Move.PosX, s_Move.PosY);
+                                omok.OnPlace(s_Move.Mover, s_Move.PosX, s_Move.PosY);
                             }
                         });
                         Managers.Timer.SetTimerNextUpdate(sceneMove);
