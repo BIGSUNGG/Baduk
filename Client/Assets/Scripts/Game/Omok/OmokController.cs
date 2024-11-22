@@ -35,10 +35,13 @@ public class OmokController : MonoBehaviour
         Managers.Network.Send(c_MovePacket);
     }
 
-    public void OnStart(StoneType myStone)
+    public void OnStart(StoneType myStone, StoneType curStone, List<PositionInfo> positions)
     {
-        CurTurn = StoneType.Black;
-        MyStone = myStone;
+        MyStone = myStone;     
+        CurTurn = curStone;
+
+        foreach (var position in positions)
+            _omokUI.OnPlace(position.Stone, position.PosX, position.PosY);
     }
 
     public void OnPlace(StoneType mover, int posX, int posY)

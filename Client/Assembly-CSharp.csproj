@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\Network\Packet\S_LogInPacket.cs" />
     <Compile Include="Assets\Scripts\UI\UI_Scene\UI_MatchingScene.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\S_Chat.cs" />
+    <Compile Include="Assets\Scripts\Network\Packet\PositionInfo.cs" />
     <Compile Include="Assets\Scripts\Network\Packet\C_RequestTopRankPacket.cs" />
     <Compile Include="Assets\Scripts\Network\Session\ServerSession.cs" />
   </ItemGroup>

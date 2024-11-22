@@ -33,19 +33,6 @@ namespace Network
         {
             LogManager.Instance.PushMessage($"Connect");
 
-            //// Keep Alive
-            //int size = Marshal.SizeOf(typeof(uint));
-            //byte[] inOptionValues = new byte[size * 3];
-
-            //// Keep Alive 활성화 여부 1 : 활성화, 0 : 비활성화
-            //BitConverter.GetBytes((uint)1).CopyTo(inOptionValues, 0);
-            //// 마지막 패킷을 받은 시간으로 부터 몇 초가 지나야 Keep Alive를 확인할 것인지
-            //BitConverter.GetBytes((uint)5000).CopyTo(inOptionValues, size); 
-            //// Keep Alive 패킷의 반응이 없을 때 재전송할 시간
-            //BitConverter.GetBytes((uint)1000).CopyTo(inOptionValues, size * 2); 
-
-            //// Keep Alive 설정
-            //_socket.IOControl(IOControlCode.KeepAliveValues, inOptionValues, null);
         }
 
         protected override void OnDiscconect()
@@ -53,7 +40,12 @@ namespace Network
             LogManager.Instance.PushMessage($"Disconnect {Name}");
 
             ClientSessionManager.Instance.Remove(this);
-            RoomManager.Instance.UnregisterSession(this);
+            RoomManager.Instance.DisconnectSession(this);
+            
+            if (MyRoom != null)
+            {
+                MyRoom.Leave(this);
+            }
         }
 
         protected override void OnRecvPacket(ArraySegment<byte> data)
@@ -127,8 +119,8 @@ namespace Network
                 case PacketType.C_StartMatch:
                     {
                         C_StartMatchPacket c_StartMatchPacket = JsonConvert.DeserializeObject<C_StartMatchPacket>(json);
-
-                        RoomManager.Instance.RegisterSession(this);
+                        
+                        RoomManager.Instance.MatchSession(this);
 
                         break;
                     }

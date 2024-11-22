@@ -80,13 +80,20 @@ namespace Network
 
                 if (message.Equals(string.Empty) == false)
                 {
-                    byte[] buffer = System.Text.Encoding.UTF8.GetBytes(message);
-                    _sendArgs.SetBuffer(buffer, 0, buffer.Length);
+                    try
+                    {
+                        byte[] buffer = System.Text.Encoding.UTF8.GetBytes(message);
+                        _sendArgs.SetBuffer(buffer, 0, buffer.Length);
 
-                    sending = true;
-                    bool pending = _socket.SendAsync(_sendArgs);
-                    if (pending == false)
-                        OnSendCompleted(null, _sendArgs);
+                        sending = true;
+                        bool pending = _socket.SendAsync(_sendArgs);
+                        if (pending == false)
+                            OnSendCompleted(null, _sendArgs);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        sending = false;
+                    }
                 }
             }
         }

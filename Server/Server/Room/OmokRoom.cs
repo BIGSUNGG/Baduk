@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Server
 {
@@ -50,6 +51,7 @@ namespace Server
                     s_EnterRoomPacket.BlackPlayerName = _blackPlayer.Name;
                     s_EnterRoomPacket.WhitePlayerName = _whitePlayer.Name;
                     s_EnterRoomPacket.YourStone = StoneType.Black;
+                    s_EnterRoomPacket.CurStone = StoneType.Black;
                     _blackPlayer.Send(s_EnterRoomPacket);
                 }
 
@@ -59,11 +61,75 @@ namespace Server
                     s_EnterRoomPacket.BlackPlayerName = _blackPlayer.Name;
                     s_EnterRoomPacket.WhitePlayerName = _whitePlayer.Name;
                     s_EnterRoomPacket.YourStone = StoneType.White;
+                    s_EnterRoomPacket.CurStone = StoneType.Black;
                     _whitePlayer.Send(s_EnterRoomPacket);
                 }
 
                 LogManager.Instance.PushMessage($"Room Start");
             }
+        }
+
+        public void ComeBack(ClientSession session)
+        {
+            session.OnEnterRoom(this);
+
+            List<PositionInfo> positions = new List<PositionInfo>();
+            for (int x = 0; x < 15; x++)
+            {
+                for (int y = 0; y < 15; y++)
+                {
+                    if (_stones[x][y] != StoneType.None)
+                        positions.Add(new PositionInfo() 
+                        { 
+                            PosX = x, 
+                            PosY = y, 
+                            Stone = _stones[x][y] 
+                        });
+                }
+            }
+
+            if (_whitePlayer.Name == session.Name)
+            {
+                _whitePlayer = session;
+
+                S_EnterRoomPacket s_EnterRoomPacket = new S_EnterRoomPacket();
+                s_EnterRoomPacket.BlackPlayerName = _blackPlayer.Name;
+                s_EnterRoomPacket.WhitePlayerName = _whitePlayer.Name;
+                s_EnterRoomPacket.YourStone = StoneType.White;
+                s_EnterRoomPacket.CurStone = _curTurn;
+                s_EnterRoomPacket.Positions = positions;
+                _whitePlayer.Send(s_EnterRoomPacket);
+            }
+
+            if (_blackPlayer.Name == session.Name)
+            {
+                _blackPlayer = session;
+
+                S_EnterRoomPacket s_EnterRoomPacket = new S_EnterRoomPacket();
+                s_EnterRoomPacket.BlackPlayerName = _blackPlayer.Name;
+                s_EnterRoomPacket.WhitePlayerName = _whitePlayer.Name;
+                s_EnterRoomPacket.YourStone = StoneType.Black;
+                s_EnterRoomPacket.CurStone = _curTurn;
+                s_EnterRoomPacket.Positions = positions;
+                _blackPlayer.Send(s_EnterRoomPacket);
+            }
+
+            StoneType leaveStone = GetSessionStoneType(session);
+            S_ChatPacket s_ChatPacket = new S_ChatPacket();
+            s_ChatPacket.Sender = "Server";
+            s_ChatPacket.Message = $"User {leaveStone} ComeBack";
+            SendAll(s_ChatPacket);
+
+            LogManager.Instance.PushMessage($"User {leaveStone} ComeBack");
+        }
+
+        public void Leave(ClientSession session)
+        {
+            StoneType leaveStone = GetSessionStoneType(session);
+            S_ChatPacket s_ChatPacket = new S_ChatPacket();
+            s_ChatPacket.Sender = "Server";
+            s_ChatPacket.Message = $"User {leaveStone} Leave";
+            SendAll(s_ChatPacket);
         }
 
         public void SendAll(Packet packet)
@@ -80,14 +146,26 @@ namespace Server
         {
             lock (_lock)
             {
-                if(_whitePlayer != sender)
+                if (_whitePlayer != sender)
                     _whitePlayer.Send(packet);
 
-                if(_blackPlayer != sender)
+                if (_blackPlayer != sender)
                     _blackPlayer.Send(packet);
             }
         }
 
+        StoneType GetSessionStoneType(ClientSession session)
+        {
+            if (_whitePlayer == session)
+                return StoneType.White;
+
+            if (_blackPlayer == session)
+                return StoneType.Black;
+
+            return StoneType.None;
+        }
+
+        #region Place
         public void PlaceStone(ClientSession mover, C_PlaceStonePacket c_MovePacket)
         {
             lock (_lock)
@@ -118,7 +196,7 @@ namespace Server
                 SendAll(s_MovePacket);
 
                 // 게임이 끝났는지
-                if(IsFiveInARow(c_MovePacket.PosX, c_MovePacket.PosY))
+                if (IsFiveInARow(c_MovePacket.PosX, c_MovePacket.PosY))
                 {
                     LogManager.Instance.PushMessage($"WIN {_curTurn}");
 
@@ -198,5 +276,6 @@ namespace Server
         {
             return x >= 0 && y >= 0 && x < _stones.Count && y < _stones[0].Count;
         }
+        #endregion
     }
 }

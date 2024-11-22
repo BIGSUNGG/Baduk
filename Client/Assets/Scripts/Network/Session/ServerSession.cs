@@ -94,7 +94,7 @@ namespace Network
                             omok.AddListener(() =>
                             {
                                 OmokController omokController = GameObject.Find("OmokController").GetComponent<OmokController>();
-                                omokController.OnStart(s_SignUpPacket.YourStone);
+                                omokController.OnStart(s_SignUpPacket.YourStone, s_SignUpPacket.CurStone, s_SignUpPacket.Positions);
                             });
                             Managers.Timer.SetTimerNextUpdate(omok);
                         });

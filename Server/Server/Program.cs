@@ -25,7 +25,6 @@ namespace Server
             Application.SetCompatibleTextRenderingDefault(false);
 
             //CreateTempAccounts();
-            var list = AccountGateWay.GetTopRank(1, 10);
 
             Application.Run(new ServerForm());
         }

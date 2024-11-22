@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Network\Packet\C_StartMatchPacket.cs" />
+    <Compile Include="Network\Packet\PositionInfo.cs" />
     <Compile Include="Network\Packet\UserInfo.cs" />
     <Compile Include="Network\Packet\S_ResponseTopRankPacket.cs" />
     <Compile Include="Network\Packet\C_RequestTopRankPacket.cs" />
